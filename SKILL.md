@@ -104,10 +104,10 @@ Skip if no stack agents detected.
 
 ### 7. Install protocol skills
 
-Copy vendored `templates/skills/*` (grilling, wayfinder, tdg — later step) to the skills scope:
+Install = copy `templates/skills/<name>/` to the skills scope chosen in step 1. Copy vendored `templates/skills/*` (grilling, wayfinder, tdg — later step):
 
 - If skill directory does NOT exist → copy from template
-- If skill directory exists → compare `template-version` markers:
+- If skill directory exists → compare `template-version` markers (installed copy vs template copy; for vendored skills the marker is an HTML comment `<!-- template-version: N -->` after the frontmatter):
   - Template version > installed version → report drift, ask user before overwriting
   - Template version <= installed version → skip, report as up-to-date
 
@@ -166,7 +166,7 @@ Report to user:
 When this skill runs on a project that already has supervisor files:
 
 - **Fill gaps only** — never overwrite existing files
-- **Version drift report** — compare `template-version` markers in installed files vs templates:
+- **Version drift report** — compare `template-version` markers in installed files vs templates. This applies to BOTH agent templates (where `template-version` is a frontmatter field) AND vendored protocol skills (where `template-version` is an HTML comment marker after the frontmatter):
   - If installed version < template version → report available upgrades, ask before updating
   - If installed version >= template version → skip, report as current
 - **New agents** — if detection finds stacks not yet covered, propose new stack agents
