@@ -44,20 +44,25 @@ Ordered steps for detecting project stacks:
    - If `package.json` exists → parse `scripts` field (look for `test`, `lint`, `build`, `typecheck`, etc.)
    - **Makefile targets take PRIORITY** over raw commands when a target exists for a gate
 
-3. **Read CI config for authoritative gate commands**
+3. **Scan for service-bus dependencies**
+   - Check `go.mod` require lines / `package.json` dependencies for messaging SDKs (`azservicebus`, `kafka-go`, `sqs`, `amqp`)
+   - If found → flag service-bus layer → instantiate `develop-service-bus` template
+   - Check Makefile for bus-specific test targets (e.g. `test-it-sb` pattern)
+
+4. **Read CI config for authoritative gate commands**
    - `.github/workflows/*.yml` → parse `run:` steps in CI jobs
    - `.gitlab-ci.yml` → parse `script:` sections
    - `.circleci/config.yml`, `azure-pipelines.yml`, `Jenkinsfile` → similar
    - CI config is authoritative — if CI runs `make ci-test`, that's the canonical test gate
 
-4. **Detect monorepo**
+5. **Detect monorepo**
    - Multiple manifests in subdirs (e.g. `frontend/package.json` + `backend/go.mod`) → one agent per layer with per-layer dirs
    - Each layer gets its own agent instantiation with layer-specific gates and dirs
 
-5. **Detect E2E / integration test layers**
+6. **Detect E2E / integration test layers**
    - `e2e/`, `tests/e2e/`, `cypress/`, `playwright/` → extends verifier gates, may need dedicated agent if complex
 
-6. **Detect container setup**
+7. **Detect container setup**
    - `Dockerfile`, `docker-compose.yml` → adds verifier gate for build validation
 
 ## C. Proposal Table Format

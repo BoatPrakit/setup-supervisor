@@ -50,8 +50,8 @@ Determine whether the target is:
 
    | Agent | Model | Purpose | Gate commands |
    |-------|-------|---------|---------------|
-   | verifier | cheap-flash | gate runner | `<!-- filled from detection -->` |
-   | qa | mid-tier | AC verification | — |
+   | verifier | cheap-flash | gate runner | none — receives gates from supervisor |
+   | qa | mid-tier | AC verification | none — delegates to workers |
    | general-coding | mid-tier | universal worker | — |
    | `develop-<stack>` | mid-tier | domain worker | `<!-- filled from detection -->` |
 
@@ -89,9 +89,8 @@ Copy the following templates to the target scope (from step 1), adapting placeho
 Placeholder adaptation rules:
 - `<!-- GATE: detected-per-project -->` → fill with detected gate commands from step 3/4
 - `<!-- GATES: filled from detection-rules at install -->` → fill with per-agent gate lists
-- `<PROJECT_ROOT>` → actual project root path
-- `<TICKET_PREFIX>` → detected or user-specified ticket prefix (e.g. `PROJ-`)
-- `<DEFAULT_AUTHOR>` → user-specified author name
+- `<TICKET_PREFIX>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project); keep empty brackets `[]` if no prefix
+- `<DEFAULT_AUTHOR>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project); keep empty brackets `[]` if none
 
 ### 6. Write project-specific agents
 
