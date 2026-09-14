@@ -1,5 +1,5 @@
 ---
-# template-version: 1
+# template-version: 2
 description: QA subagent. Prepares clean, lean, consistent test scenarios + data covering each Acceptance Criteria clause; appends test cases to existing related test files when present, creates conventionally-named files only when none exists; independently verifies worker subagent outcomes against AC; audits Test Pyramid distribution (unit > integration > e2e); assertions target user-visible UI state, never network responses. Never writes files — orchestrates explore + coding workers for ALL authoring.
 mode: subagent
 model: <!-- MODEL: detected at install -->

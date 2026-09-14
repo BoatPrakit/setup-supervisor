@@ -1,5 +1,5 @@
 ---
-# template-version: 1
+# template-version: 2
 description: Fallback universal coding agent when no domain agent matches. Implements the plan received from the parent agent; code must be consistent with the existing codebase.
 mode: subagent
 model: <!-- MODEL: detected at install -->

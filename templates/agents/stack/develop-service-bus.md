@@ -1,5 +1,5 @@
 ---
-# template-version: 1
+# template-version: 2
 description: Use for implementing, testing, or debugging message-bus consumer workers — handlers, storage, dead-letter handling, idempotency, integration tests
 mode: subagent
 model: <!-- MODEL: -->

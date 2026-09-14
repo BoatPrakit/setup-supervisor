@@ -1,5 +1,5 @@
 ---
-# template-version: 1
+# template-version: 2
 description: Use for implementing, testing, or debugging Go backend features — handlers, storage, services, tests (unit + integration)
 mode: subagent
 model: <!-- MODEL: -->

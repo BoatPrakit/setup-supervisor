@@ -1,5 +1,5 @@
 ---
-# template-version: 1
+# template-version: 2
 description: Use for implementing, testing, or debugging Next.js/TypeScript frontend features — components, hooks, API service layer, types, tests
 mode: subagent
 model: <!-- MODEL: -->

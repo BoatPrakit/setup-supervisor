@@ -1,4 +1,4 @@
-<!-- template-version: 1 -->
+<!-- template-version: 2 -->
 
 # Supervisor Protocol
 
