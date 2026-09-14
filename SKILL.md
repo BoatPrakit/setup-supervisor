@@ -101,6 +101,11 @@ From `templates/agents/stack/*` (later step), write domain-specific worker agent
 
 Skip if no stack agents detected.
 
+- **Directory maps**: detect actual dirs from the project. For new/empty trees, write canonical layout marked `<!-- suggested, not detected -->`.
+- **Undetected project artifacts** (OpenAPI files, convention docs): write `not detected — add when created` and move on. Do not block.
+- **Raw commands**: when a signature-table gate has no Makefile target, use the raw command but flag in the proposal table: `raw command (no Makefile target found)`.
+- **Skipped templates**: list stack templates detected-but-not-needed (e.g. `develop-service-bus: available, no bus deps detected — skipped`) in the post-install summary.
+
 ### 7. Install protocol skills
 
 Install = copy `templates/skills/<name>/` to the skills scope chosen in step 1. Copy vendored `templates/skills/*` (grilling, wayfinder, tdg — later step):
@@ -109,6 +114,8 @@ Install = copy `templates/skills/<name>/` to the skills scope chosen in step 1. 
 - If skill directory exists → compare `template-version` markers (installed copy vs template copy; for vendored skills the marker is an HTML comment `<!-- template-version: N -->` after the frontmatter):
   - Template version > installed version → report drift, ask user before overwriting
   - Template version <= installed version → skip, report as up-to-date
+
+- **Note**: tdg references a project `TDG.md` (tech-stack doc). Not shipped with this skill — if absent, tell user to create one (or skip tdg usage until it exists).
 
 ### 8. Memory plugin opt-in
 
@@ -170,6 +177,7 @@ When this skill runs on a project that already has supervisor files:
   - If installed version >= template version → skip, report as current
 - **New agents** — if detection finds stacks not yet covered, propose new stack agents
 - **Missing skills** — if protocol skills are missing, offer to install them
+- **Version markers differ by design**: agent/protocol templates carry `template-version` in frontmatter; vendored skills carry it as an HTML comment below frontmatter (opencode parses skill frontmatter strictly).
 
 ## Hard rules
 

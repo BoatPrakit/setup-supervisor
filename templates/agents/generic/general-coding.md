@@ -2,7 +2,7 @@
 # template-version: 1
 description: Fallback universal coding agent when no domain agent matches. Implements the plan received from the parent agent; code must be consistent with the existing codebase.
 mode: subagent
-model: bifrost/dashscope/qwen3.7-plus
+model: <!-- MODEL: detected at install -->
 temperature: 0.1
 permission:
   edit: allow

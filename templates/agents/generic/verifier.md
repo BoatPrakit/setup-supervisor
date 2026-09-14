@@ -2,7 +2,7 @@
 # template-version: 1
 description: Gate runner. Executes validation commands (build/test/lint/e2e/integration) exactly as received; reports one-line PASS per gate, or failed test names + actual error descriptions on FAIL. Never edits files.
 mode: subagent
-model: bifrost/dashscope/qwen3.7-flash
+model: <!-- MODEL: detected at install -->
 temperature: 0
 permission:
   edit: deny
