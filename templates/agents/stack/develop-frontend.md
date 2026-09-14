@@ -2,7 +2,7 @@
 # template-version: 1
 description: Use for implementing, testing, or debugging Next.js/TypeScript frontend features — components, hooks, API service layer, types, tests
 mode: subagent
-model: <!-- MODEL: detected at install, e.g. bifrost/dashscope/qwen3.7-plus -->
+model: <!-- MODEL: -->
 temperature: 0.1
 steps: 40
 color: info

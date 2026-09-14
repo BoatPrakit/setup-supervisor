@@ -54,27 +54,24 @@ Sub-questions (ask only if not obvious from section 1):
 
 ---
 
-## Section 4: Subagent naming and models
+## Section 4: Subagent naming
 
-**Question:** What should domain-specific agents be named? Convention is `develop-<domain>` (e.g. `develop-backend`, `develop-frontend`). What model tier per agent?
-
-Model tier guide:
-- **Cheap/flash** — fast, low cost. Good for: verifier (gate runner), explore/scout agents.
-- **Mid-tier** — balanced. Good for: qa, general-coding, most domain workers.
-- **Strong** — expensive, smart. Good for: supervisor (planning), complex domain workers.
+**Question:** What should domain-specific agents be named? Convention is `develop-<domain>` (e.g. `develop-backend`, `develop-frontend`).
 
 **Recommended default:**
-| Agent | Model tier |
-|-------|-----------|
-| supervisor | strong |
-| verifier | cheap/flash |
-| qa | mid-tier |
-| general-coding | mid-tier |
-| develop-\<domain\> | mid-tier |
+| Agent | Purpose |
+|-------|---------|
+| supervisor | planning, delegation, validation |
+| verifier | gate runner |
+| qa | AC verification |
+| general-coding | universal worker |
+| develop-\<domain\> | domain worker (one per detected stack) |
 
-**Why it matters:** Agent names become file names in `.opencode/agent/` or `~/.config/opencode/agent/`. Model assignment controls cost and quality. Over-provisioning = wasted cost; under-provisioning = bad plans.
+**Why it matters:** Agent names become file names in `.opencode/agent/` or `~/.config/opencode/agent/`. Names should reflect the domain they own.
 
-**Feeds into:** Agent frontmatter (name, model) in all generated agent files.
+**Feeds into:** Agent filenames and frontmatter `name` field.
+
+**Model assignment is deferred.** After the interview completes, the SKILL.md step 3.5 harvest flow runs: it scans the user's existing opencode config + agent frontmatter for model IDs, tags them by tier heuristic (cheap/mid/strong), and walks the user through per-agent confirm/override. On a fresh machine the harvest returns empty — the user supplies real model IDs via free-text override against the tier labels.
 
 ---
 
@@ -105,7 +102,7 @@ After all 5 sections, present this table before writing any files:
 | 1 | Stacks/layers | `<answer>` | Agent templates to instantiate |
 | 2 | Project layout | `<answer>` | `<!-- DIRS: -->` placeholders |
 | 3 | Test framework + gates | `<answer>` | `<!-- GATE: -->` placeholders |
-| 4 | Subagent naming + models | `<answer>` | Agent frontmatter |
+| 4 | Subagent naming | `<answer>` | Agent filenames + frontmatter `name`; model IDs filled later via SKILL.md step 3.5 harvest flow |
 | 5 | Git/commit conventions | `<answer>` | Commit template in AGENTS.md |
 
 **Ask:** "Proceed with these answers? (yes/no/changes needed)"

@@ -63,6 +63,42 @@ Determine whether the target is:
 
 4. **Confirm** before writing. Show final agent list + gate table.
 
+5. **Model assignment.** Run the procedure below to assign a concrete model ID to every agent in the confirmed proposal table.
+
+   **Harvest suggestions (read-only, never print auth keys/tokens — model IDs only):**
+
+   Union of these sources, deduped:
+
+   - **Config files** — `~/.config/opencode/opencode.jsonc` + project `opencode.jsonc` / `.opencode/project.json`: extract provider/model blocks (the keys inside `"providers"` and their `"models"` maps).
+   - **Agent frontmatter** — `rg "^model:" ~/.config/opencode/agent/` + `rg "^model:" .opencode/agent/` (if present).
+
+   Collect every distinct `provider/model-id` string. Discard duplicates.
+
+   **Tier tagging by name heuristic:**
+
+   | Pattern in model ID | Tier label |
+   |---------------------|-----------|
+   | `flash\|lite\|haiku\|mini` | cheap |
+   | `plus\|pro\|max\|opus` | strong |
+   | anything else | mid |
+
+   **Fallback:** if harvest yields zero models (fresh machine, no agents yet), skip the suggestion column — show tier labels only (`cheap` / `mid` / `strong`) and rely on free-text override.
+
+   **Assignment flow:**
+
+   1. Offer **"accept all suggestions?"** first — if yes, apply harvested suggestion per tier mapping and skip per-agent prompts.
+   2. Otherwise, walk the confirmed proposal table row by row. For each agent show:
+
+      | Agent | Tier | Suggested model | Alternatives |
+      |-------|------|-----------------|--------------|
+      | verifier | cheap | `<harvested cheap match>` | `<other cheap IDs>` |
+      | qa | mid | `<harvested mid match>` | `<other mid IDs>` |
+      | general-coding | mid | `<harvested mid match>` | `<other mid IDs>` |
+      | develop-\<stack\> | mid | `<harvested mid match>` | `<other mid IDs>` |
+
+   3. Per agent: confirm suggestion, pick alternative, or **free-text override** (any `provider/model-id` string, even ones not harvested).
+   4. Record final per-agent models — they fill `<!-- MODEL: -->` placeholders at write time (step 5/6).
+
 ### 4. New project path
 
 Run the full interview per `reference/new-project-interview.md` (later step file). Collect:
@@ -70,10 +106,12 @@ Run the full interview per `reference/new-project-interview.md` (later step file
 - **Stacks/layers** — what languages, frameworks, runtime
 - **Project layout** — directory conventions (monorepo? separate frontend/backend?)
 - **Test framework + gate commands** — what to run for build/test/lint
-- **Subagent naming + models** — which domain agents, which models
+- **Subagent naming** — which domain agents (model assignment deferred to step 3.5 procedure)
 - **Git/commit conventions** — ticket prefix format, author name, branch naming
 
-Then proceed to step 5 with collected answers.
+After the interview completes, run the **model assignment procedure from step 3.5** (harvest + tier tag + per-agent confirm/override). On a fresh machine the harvest likely returns empty — that's fine, the user supplies real model IDs via free-text override against the tier labels.
+
+Then proceed to step 5 with collected answers + assigned models.
 
 ### 5. Write generic core
 
@@ -89,6 +127,7 @@ Copy the following templates to the target scope (from step 1), adapting placeho
 Placeholder adaptation rules:
 - `<!-- GATE: detected-per-project -->` → fill with detected gate commands from step 3/4
 - `<!-- GATES: filled from detection-rules at install -->` → fill with per-agent gate lists
+- `<!-- MODEL: -->` → fill with the model ID assigned in step 3.5 (per agent, from the final assignment table)
 - `<TICKET_PREFIX>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project); keep empty brackets `[]` if no prefix
 - `<DEFAULT_AUTHOR>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project); keep empty brackets `[]` if none
 

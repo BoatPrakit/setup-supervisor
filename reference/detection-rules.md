@@ -26,8 +26,11 @@ Each row: signature file/pattern → detected stack → agent to instantiate (te
 | `*.csproj`/`*.sln` | .NET (C#) | (no shipped template — propose general-coding until template exists) | `dotnet build`, `dotnet test`, `dotnet format --verify-no-changes` | mid |
 
 **Notes:**
-- "mid" = mid-tier model (e.g. `bifrost/dashscope/qwen3.7-plus`)
-- "cheap-mid" = cheap-to-mid model (e.g. `bifrost/dashscope/qwen3.7-plus` or flash variant)
+- Tier labels (`cheap`, `mid`, `strong`, `cheap-mid`) define **meaning** — which capability tier an agent needs. Concrete model IDs are resolved at install time via the harvest procedure in SKILL.md step 3.5.
+- "cheap" = fast, low-cost model (heuristic: ID contains `flash`, `lite`, `haiku`, or `mini`)
+- "mid" = balanced model (default when no cheap/strong heuristic matches)
+- "strong" = expensive, high-capability model (heuristic: ID contains `plus`, `pro`, `max`, or `opus`)
+- "cheap-mid" = cheap-to-mid range (verifier-adjacent agents that can step up if needed)
 - "—" = not applicable (verifier gate addition only, no dedicated agent)
 - Stacks without shipped templates → propose `general-coding` agent until a dedicated template exists
 
