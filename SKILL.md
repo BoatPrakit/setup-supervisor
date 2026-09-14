@@ -128,8 +128,8 @@ Placeholder adaptation rules:
 - `<!-- GATE: detected-per-project -->` → fill with detected gate commands from step 3/4
 - `<!-- GATES: filled from detection-rules at install -->` → fill with per-agent gate lists
 - `<!-- MODEL: -->` → fill with the model ID assigned in step 3.5 (per agent, from the final assignment table)
-- `<TICKET_PREFIX>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project); keep empty brackets `[]` if no prefix
-- `<DEFAULT_AUTHOR>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project); keep empty brackets `[]` if none
+- `<TICKET_PREFIX>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project); if no prefix, omit the ticket segment entirely from the template (use `[<DEFAULT_AUTHOR>] <type>: <description>` form) — never leave empty `[]`
+- `<DEFAULT_AUTHOR>` → in installed protocol AGENTS.md commit template; fill from interview section 5 (new project) or step-3 grilling (existing project)
 
 ### 6. Write project-specific agents
 

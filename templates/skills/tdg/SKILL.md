@@ -51,16 +51,18 @@ Before starting TDG workflow:
 
 ## How to commit
 - When committing using Git, DO NOT use `git -a` or `git add .`. Commit only files you have just edited.
-- Commit message format: `<issue-key> [AUTHOR] <type>: <description>`
+- Commit message format: `<TICKET_PREFIX> [AUTHOR] <type>: <description>` (with ticket) or `[AUTHOR] <type>: <description>` (no ticket prefix — omit ticket segment entirely)
   - Types: `feat` (new features), `fix` (bug fixes), `refactor`, `refactor: chore`, `docs` (documentation)
-  - Examples: 
+  - Examples (with ticket): 
     - `PROJ-1234 [AUTHOR] feat: add user authentication`
     - `PROJ-1234 [AUTHOR] fix: resolve login validation issue`
     - `PROJ-1234 [AUTHOR] docs: add API documentation for auth endpoint`
-- ALWAYS include the issue key as prefix (e.g., `PROJ-1234`) for traceability.
-- IF no issue number is available, THEN ask the user before committing.
+  - Examples (no ticket):
+    - `[AUTHOR] feat: add user authentication`
+    - `[AUTHOR] fix: resolve login validation issue`
+- IF a ticket prefix is configured, include it. IF no ticket prefix exists, omit the ticket segment entirely (never empty brackets).
 - IF user provides only a number, prepend default prefix `PROJ-` to form the full key (e.g., `PROJ-1234`).
-- IF user does not have issue for the commit, THEN help them create by reverse engineering what we're doing as a precise issue description with:
+- IF user does not have issue for the commit and a ticket prefix is required, THEN help them create by reverse engineering what we're doing as a precise issue description with:
   * Clear title summarizing the feature/fix
   * Acceptance criteria based on tests being written
   * Technical context from the implementation

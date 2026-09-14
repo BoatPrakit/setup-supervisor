@@ -87,7 +87,7 @@ Sub-questions (ask only if not obvious from section 1):
 - Author name: ask the user directly
 - Branch naming: `feature/<description>` or `fix/<description>`
 
-**Why it matters:** The supervisor protocol enforces a commit template: `[ticket ID] [author] [type]: [description]`. Every subagent commit must follow this. Wrong conventions = inconsistent git history.
+**Why it matters:** The supervisor protocol enforces a commit template: `<TICKET_PREFIX> [author] <type>: <description>` when a ticket prefix is configured, or `[author] <type>: <description>` when no ticket prefix exists (omit the ticket segment entirely — never empty brackets). Every subagent commit must follow this. Wrong conventions = inconsistent git history.
 
 **Feeds into:** Supervisor protocol (`AGENTS.md`) commit template, delegation prompts.
 
