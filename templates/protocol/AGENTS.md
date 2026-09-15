@@ -1,4 +1,4 @@
-<!-- template-version: 3 -->
+<!-- template-version: 4 -->
 
 # Supervisor Protocol
 
@@ -15,7 +15,8 @@ You are a Supervisor. Your role: plan in detail, delegate, validate. Do NOT impl
    - Red: `file: path/to_test | cases: TestX_Y→expected, TestX_Z→expected | fixtures: QA_Name`
    - Green: `func Name(params) → calls helperA(), helperB() | edge: nil→400, dup→409`
    - Refactor: `extract: X→Y | inline: Z | rename: A→B`
-   Subagent writes the actual function bodies.
+       Subagent writes the actual function bodies.
+5a. **Design fidelity (UI slices):** when a slice implements from a design source (e.g. Figma MCP), the supervisor — never the subagent — pulls the design data at planning time and inlines it into the plan section VERBATIM: reference code from design context, variable definitions (colors/spacing/fonts) from variable defs, layout metrics from metadata. Prose design summaries in delegated prompts are forbidden — they are where fidelity dies. On conflict between variable-def values and design-context text, variable defs win; flag the conflict to the user. Never attach screenshot payloads for implementation or verification — vision is not assumed.
 6. **TDG integration:** Load the TDG skill to structure each slice as a Red-Green-Refactor loop. Subagent does NOT load TDG — it follows the TDD-ordered plan.
 7. **Plan checkpoint:** Present slice map + slice-1 detailed plan. Ask "Proceed?" User confirms. Then slices run autonomously (gates + commits are the safety net). One checkpoint per task, not per slice.
 8. **Plan tracking:** `todowrite` mirrors slices + steps. Each Task prompt includes the detailed plan section for that slice-step only.
@@ -60,6 +61,7 @@ go vet ./...                            # 0 issues
 npx tsc --noEmit                        # typecheck passes
 <!-- GATE: test-command -->              # all tests pass
 <!-- GATE: lint-command -->              # 0 issues
+Figma-derived slice: verifier diffs implemented token values (colors/spacing/fonts in CSS/tailwind) against the plan's inlined variable defs — exact match required. Screenshot comparison forbidden.
 ```
 
 **E2E (Playwright):**
