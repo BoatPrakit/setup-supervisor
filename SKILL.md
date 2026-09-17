@@ -145,6 +145,27 @@ Skip if no stack agents detected.
 - **Raw commands**: when a signature-table gate has no Makefile target, use the raw command but flag in the proposal table: `raw command (no Makefile target found)`.
 - **Skipped templates**: list stack templates detected-but-not-needed (e.g. `develop-service-bus: available, no bus deps detected — skipped`) in the post-install summary.
 
+### 6.5. Register supervisor agent in opencode.jsonc
+
+Append a `supervisor` entry to the `agent` map in the opencode.jsonc for the scope chosen in step 1:
+
+```jsonc
+"supervisor": {
+  "description": "Plans, delegates to subagents via Task, runs read-only validation gates (build/test/lint/diff). Never edits files directly.",
+  "mode": "primary",
+  "model": "<SUPERVISOR_MODEL>",
+  "prompt": "{file:<AGENT_PROTOCOL_PATH>}"
+}
+```
+
+- `<SUPERVISOR_MODEL>` → fill from step 3.5 harvest/override (strong tier by default).
+- `<AGENT_PROTOCOL_PATH>` → path to the protocol AGENTS.md written in earlier steps, **relative to the opencode.jsonc being edited**:
+  - Global scope (jsonc and AGENTS.md both in `~/.config/opencode/`) → `./AGENTS.md`
+  - Project scope (both under `.opencode/`) → `./AGENTS.md`
+  - Mixed scopes → path to the actual AGENTS.md location (e.g. project jsonc referencing user-scope AGENTS.md → `../.config/opencode/AGENTS.md`)
+- **Idempotent**: if `supervisor` key already exists in the `agent` map → skip, note in drift report.
+- Preserve jsonc comments/formatting when editing (append, don't rewrite file).
+
 ### 7. Install protocol skills
 
 Install = copy `templates/skills/<name>/` to the skills scope chosen in step 1. Copy vendored `templates/skills/*` (grilling, wayfinder, tdg — later step):
@@ -214,6 +235,7 @@ When this skill runs on a project that already has supervisor files:
 - **Version drift report** — compare `template-version` markers in installed files vs templates. This applies to BOTH agent templates (where `template-version` is a frontmatter field) AND vendored protocol skills (where `template-version` is an HTML comment marker after the frontmatter):
   - If installed version < template version → report available upgrades, ask before updating
   - If installed version >= template version → skip, report as current
+- **opencode.jsonc drift check** — confirm the `agent` map contains `supervisor` with `mode: primary` and a resolvable `prompt` path. If missing → offer to register (step 6.5).
 - **New agents** — if detection finds stacks not yet covered, propose new stack agents
 - **Missing skills** — if protocol skills are missing, offer to install them
 - **Version markers differ by design**: agent/protocol templates carry `template-version` in frontmatter; vendored skills carry it as an HTML comment below frontmatter (opencode parses skill frontmatter strictly).
