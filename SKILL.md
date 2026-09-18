@@ -188,7 +188,7 @@ Add a Figma MCP server entry to the `mcp` map in the opencode.jsonc for the scop
 
 | Flavor | Config | Notes |
 |--------|--------|-------|
-| **stdio** | `{ "type": "local", "command": "npx", "args": ["figma-developer-mcp"], "environment": { "FIGMA_API_KEY": "<user-supplied>" } }` | User supplies API key interactively; **never echo or log the key value** |
+| **stdio** | `{ "type": "local", "command": ["npx", "-y", "figma-developer-mcp"], "enabled": true, "environment": { "FIGMA_API_KEY": "<user-supplied>" } }` | User supplies API key interactively; **never echo or log the key value** |
 | **desktop remote** | `{ "type": "remote", "url": "http://127.0.0.1:3845/mcp" }` | Requires Figma desktop app running |
 
 - Key name for new entry: `figma`
