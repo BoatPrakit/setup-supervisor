@@ -1,5 +1,5 @@
 ---
-# template-version: 2
+# template-version: 3
 description: Use for implementing, testing, or debugging Go backend features — handlers, storage, services, tests (unit + integration)
 mode: subagent
 model: <!-- MODEL: -->
@@ -87,6 +87,8 @@ ANY new/changed endpoint or param MUST be added to the project's OpenAPI spec fi
 <!-- OPENAPI_FILES: paths to OpenAPI spec files, e.g. backend/openapi/openapi.yaml -->
 
 ## Gates
+
+**Test scoping (per step):** run only tests for packages you touched — `go test ./<changed-package>/...`; for harvested make targets use the `p=` pattern filter when supported, else `go test` direct on changed packages. NEVER run the full suite per step — the supervisor's final validation gate owns full-suite runs. `go build ./...` and `go vet ./...` stay project-wide by nature.
 
 <!-- GATES: backend gates detected at install, e.g. -->
 <!-- - go build ./... -->

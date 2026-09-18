@@ -1,5 +1,5 @@
 ---
-# template-version: 3
+# template-version: 4
 description: Use for implementing, testing, or debugging Next.js/TypeScript frontend features — components, hooks, API service layer, types, tests
 mode: subagent
 model: <!-- MODEL: -->
@@ -99,9 +99,10 @@ Structure: `describe('ComponentName')` → `describe('when [condition]')` → `t
 
 ## Gates
 
+**Test scoping (per step):** run only tests related to files you touched — append touched paths to the harvested test command (e.g. `npx jest <touched-files>`), or use `--findRelatedTests <changed source files>` when the runner supports it. If you edited test files directly, run exactly those. NEVER run the full suite per step — the supervisor's final validation gate owns full-suite runs. Typecheck (`tsc --noEmit`) stays project-wide by nature.
+
 <!-- GATES: frontend gates detected at install, e.g. -->
 <!-- - npx tsc --noEmit (zero errors, mandatory) -->
-<!-- - npx jest <touched-paths> (or bun test, npm test — new + existing tests pass) -->
 <!-- - npm run lint (or bun run lint — zero issues) -->
 
 Run inside <!-- WORKDIR: e.g. frontend/ -->:

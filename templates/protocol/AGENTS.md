@@ -1,4 +1,4 @@
-<!-- template-version: 6 -->
+<!-- template-version: 7 -->
 
 # Supervisor Protocol
 
@@ -54,6 +54,7 @@ go build ./...                          # must compile, zero errors
 <!-- GATE: lint-command -->              # 0 issues
 go vet ./...                            # 0 issues
 ```
+(Per-step subagent gates: scope go test to changed packages — full suite belongs to the final validation gate.)
 
 **Frontend (TypeScript/Next.js):**
 ```
@@ -61,6 +62,7 @@ npx tsc --noEmit                        # typecheck passes
 <!-- GATE: test-command -->              # all tests pass
 <!-- GATE: lint-command -->              # 0 issues
 ```
+(Per-step subagent gates: scope jest/bun test to touched files — full suite belongs to the final validation gate.)
 
 **E2E (Playwright):**
 ```
