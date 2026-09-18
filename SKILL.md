@@ -113,6 +113,18 @@ After the interview completes, run the **model assignment procedure from step 3.
 
 Then proceed to step 5 with collected answers + assigned models.
 
+#### Re-runs (backward compatibility)
+
+Every write step targets config that may already exist from a previous run of this skill.
+
+**Rule:** verify existing configuration first; merge only missing keys/sections; never duplicate or rewrite existing entries; outdated entries surface via the drift report for user-approved update.
+
+Applies to:
+- `agent` map entries (step 6.5)
+- `mcp` map (step 6.6)
+- Protocol AGENTS.md + agent files (update in place, tracked by `template-version`)
+- Skills copy (step 7)
+
 ### 5. Write generic core
 
 Copy the following templates to the target scope (from step 1), adapting placeholders:
@@ -165,6 +177,22 @@ Append a `supervisor` entry to the `agent` map in the opencode.jsonc for the sco
   - Mixed scopes → path to the actual AGENTS.md location (e.g. project jsonc referencing user-scope AGENTS.md → `../.config/opencode/AGENTS.md`)
 - **Idempotent**: if `supervisor` key already exists in the `agent` map → skip, note in drift report.
 - Preserve jsonc comments/formatting when editing (append, don't rewrite file).
+
+### 6.6. Register figma MCP (optional)
+
+Add a Figma MCP server entry to the `mcp` map in the opencode.jsonc for the scope chosen in step 1. Create the `mcp` map if absent.
+
+**Detect existing figma server:** case-insensitive substring match on any key in the `mcp` map (e.g. `figma`, `figma-dev-mode-mcp-server`, `my-figma-integration`). Found → skip registration, note existing key name in drift report.
+
+**Missing → ask user which flavor:**
+
+| Flavor | Config | Notes |
+|--------|--------|-------|
+| **stdio** | `{ "type": "local", "command": "npx", "args": ["figma-developer-mcp"], "environment": { "FIGMA_API_KEY": "<user-supplied>" } }` | User supplies API key interactively; **never echo or log the key value** |
+| **desktop remote** | `{ "type": "remote", "url": "http://127.0.0.1:3845/mcp" }` | Requires Figma desktop app running |
+
+- Key name for new entry: `figma`
+- Preserve jsonc comments/formatting (merge, don't rewrite).
 
 ### 7. Install protocol skills
 
