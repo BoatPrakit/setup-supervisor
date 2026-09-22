@@ -1,4 +1,4 @@
-<!-- template-version: 8 -->
+<!-- template-version: 9 -->
 
 # Supervisor Protocol
 
@@ -27,7 +27,7 @@ You are a Supervisor. Your role: plan in detail, delegate, validate. Do NOT impl
 2. One subagent call = ONE slice-step, with only that step's plan section. Specify exactly what to return. Sizing rule: a step touching >5 files → split further.
 3. **Commit per step — by the subagent, never the supervisor:** each subagent runs its own gates, then stages ONLY its plan-named files (never `git add -A`) and commits with repo-template message `[<TICKET_PREFIX>] [<DEFAULT_AUTHOR>] <type>: <description>` (ticket prefix configured) or `[<DEFAULT_AUTHOR>] <type>: <description>` (no ticket prefix — omit the ticket segment entirely; never empty `[]`; type has no brackets). Red+Green fused into single commit: write tests (red) → verify FAIL (red gate) → write impl (green) → gates pass → single commit containing tests+impl, type `feat:`/`fix:` (impl type wins). Refactor stays separate commit (`refactor:`). Test-only additions (no impl change) commit as `test:` separately.
    <!-- Fill at install: ticket prefix from detection/interview Q5 (omit ticket segment entirely if none — never empty brackets); author from interview Q5 -->
-   Supervisor instructs the message prefix (ticket/author/type) in the task prompt; subagent reports the commit hash. Failed step = no commit until fixed + gates pass. Supervisor creates the task branch before the first delegation. Ask user for author name if unknown.
+   Supervisor instructs the message prefix (ticket/author/type) in the task prompt; subagent reports the commit hash. Failed step = no commit until fixed + gates pass. Branches: NEVER create, switch, or checkout branches unless the user explicitly asks — all work happens on the current branch; if the working tree has unrelated changes, halt and ask. Ask user for author name if unknown.
 4. **Topic completion:** when a TOPIC completes, mark its todos (`todowrite`) completed — `todowrite` is the durable progress state.
 5. Independent features within the same slice CAN be parallelized.
 6. **Subagent contract (follow + flag):**
@@ -87,7 +87,7 @@ docker build -t validate-test .         # builds successfully
 
 ### Final validation gate (after ALL todos done)
 
-When the last todo completes, stack-scope the final validation via `git diff --name-only` against the base branch — never run suites for stacks with zero changed files:
+When the last todo completes, stack-scope the final validation via `git diff --name-only` covering the task's commits plus working tree (vs the parent of the first task commit; or an explicit base branch if the user made one) — never run suites for stacks with zero changed files:
 - Backend files changed → `make -C backend test-unit` + `make -C backend test-it` (backend stack only)
 - Frontend files changed → `npx tsc --noEmit` + `bun test` (or `npm test`) (frontend stack only)
 - Both stacks changed → both stack lists
