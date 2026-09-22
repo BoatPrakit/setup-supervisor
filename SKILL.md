@@ -163,7 +163,7 @@ Append a `supervisor` entry to the `agent` map in the opencode.jsonc for the sco
 
 ```jsonc
 "supervisor": {
-  "description": "Plans, delegates to subagents via Task, runs read-only validation gates (build/test/lint/diff). Never edits files directly.",
+  "description": "Plans, delegates to subagents via Task, delegates gate execution to a verifier subagent and reviews results. Never edits files directly.",
   "mode": "primary",
   "model": "<SUPERVISOR_MODEL>",
   "prompt": "{file:<AGENT_PROTOCOL_PATH>}"
