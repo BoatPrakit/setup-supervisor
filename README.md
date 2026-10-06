@@ -60,30 +60,26 @@ flowchart LR
 
 stack agents implement; `qa` and `verifier` never write code — they check it.
 
-### Task loop
+### Example: one feature, every agent
 
 ```mermaid
 flowchart TD
-    U[User task] --> S[Supervisor grills scope]
-    S --> P[Slice map + plan checkpoint]
-    P --> L{per slice}
-    L --> SC[scout: explore codebase for reuse]
-    SC --> W[stack agent: red tests → FAIL gate → green impl → self-gates scoped to touched files → fused commit]
-    W --> R{refactor needed?}
-    R -->|yes| RF[stack agent: refactor + gates + commit]
-    R -->|no| L
-    RF --> L
-    L -->|all done| F[verifier: final validation, stack-scoped suites]
-    F --> Q[qa: per-clause AC verdict]
-    Q --> D[done]
-    S -.reviews diffs, never edits.-> W
-    S -.delegates gate runs.-> F
+    U["User: add dark-mode toggle"] --> G["Supervisor: grill scope → write plan"]
+    G --> SC["scout: find existing theme hooks + CSS"]
+    SC --> FE["develop-frontend: write failing tests → verify FAIL"]
+    FE --> FE2["develop-frontend: implement → tsc + related tests → commit"]
+    FE2 --> REV["Supervisor: review diff + executed gate outputs"]
+    REV --> VER["verifier: run full frontend suite"]
+    VER --> QA["qa: AC verdict per clause"]
+    QA --> DONE["done"]
 ```
 
-- Delegation = one Task call per slice-step, prompt carries only that step's plan section
-- Subagents self-gate (scoped to touched files) and commit their own work; supervisor never edits or commits
-- Independent gate runs (verification, reproduction, final validation) go to `verifier`; spec compliance goes to `qa`
-- Supervisor reviews diffs + executed gate outputs; subjective "tests pass" claims rejected
+1. **Supervisor** — interrogates scope (which pages? toggle persistence?), writes function-level plan, one plan section per delegation.
+2. **scout** — reports reusable pieces (existing `ThemeProvider`, css variable names) so nothing gets reinvented.
+3. **develop-frontend** — test-first: writes failing tests, verifies they FAIL, implements, runs typecheck + tests for touched files only, commits (`[Author] feat: ...`), reports hash.
+4. **Supervisor** — reviews the diff and the executed gate output; asks `verifier` to re-run only if output looks missing or suspicious.
+5. **verifier** — at task end, runs the full stack suite (`tsc --noEmit` + frontend tests) and reports one-line PASS per gate or failing test names + errors.
+6. **qa** — checks the deliverable against each acceptance-criteria clause; any `fail` goes back to `develop-frontend` with evidence.
 
 ## Hard rules
 
