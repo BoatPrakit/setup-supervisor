@@ -46,27 +46,44 @@ setup-supervisor/
 
 ## How it runs
 
+### The fleet
+
 ```mermaid
-flowchart TD
-    A[User task] --> B[Supervisor grills scope]
-    B --> C[Slice map]
-    C --> D{per slice}
-    D --> E[scout]
-    E --> F[red: tests, FAIL gate]
-    F --> G[green: impl + gates]
-    G --> H[fused commit]
-    H --> I{refactor?}
-    I -->|yes| J[refactor + gates + commit]
-    I -->|no| D
-    J --> D
-    D -->|done| K[final validation]
-    K --> L[qa AC gate]
-    L --> M[done]
+flowchart LR
+    SUP[Supervisor<br>plans · delegates · reviews] --> FE[develop-frontend<br>frontend slices]
+    SUP --> BE[develop-backend<br>backend slices]
+    SUP --> SB[develop-service-bus<br>service-bus consumers]
+    SUP --> QA[qa<br>AC verification]
+    SUP --> VER[verifier<br>gate runner]
+    SUP --> GC[general-coding<br>fallback coding]
 ```
 
-- Per-step tests scoped to touched files/packages; full suites only at final validation
-- Commits by subagents only (`[Author] type: description`)
-- Supervisor never edits code
+stack agents implement; `qa` and `verifier` never write code — they check it.
+
+### Task loop
+
+```mermaid
+flowchart TD
+    U[User task] --> S[Supervisor grills scope]
+    S --> P[Slice map + plan checkpoint]
+    P --> L{per slice}
+    L --> SC[scout: explore codebase for reuse]
+    SC --> W[stack agent: red tests → FAIL gate → green impl → self-gates scoped to touched files → fused commit]
+    W --> R{refactor needed?}
+    R -->|yes| RF[stack agent: refactor + gates + commit]
+    R -->|no| L
+    RF --> L
+    L -->|all done| F[verifier: final validation, stack-scoped suites]
+    F --> Q[qa: per-clause AC verdict]
+    Q --> D[done]
+    S -.reviews diffs, never edits.-> W
+    S -.delegates gate runs.-> F
+```
+
+- Delegation = one Task call per slice-step, prompt carries only that step's plan section
+- Subagents self-gate (scoped to touched files) and commit their own work; supervisor never edits or commits
+- Independent gate runs (verification, reproduction, final validation) go to `verifier`; spec compliance goes to `qa`
+- Supervisor reviews diffs + executed gate outputs; subjective "tests pass" claims rejected
 
 ## Hard rules
 
