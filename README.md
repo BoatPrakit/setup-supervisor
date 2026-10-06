@@ -50,8 +50,8 @@ setup-supervisor/
 
 ```mermaid
 flowchart LR
-    SUP[Supervisor<br>plans · delegates · reviews] --> FE[develop-frontend<br>frontend slices]
-    SUP --> BE[develop-backend<br>backend slices]
+    SUP[Supervisor<br>plans · delegates · reviews] --> FE[develop-frontend<br>frontend features]
+    SUP --> BE[develop-backend<br>backend features]
     SUP --> SB[develop-service-bus<br>service-bus consumers]
     SUP --> QA[qa<br>AC verification]
     SUP --> VER[verifier<br>gate runner]
